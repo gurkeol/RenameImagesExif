@@ -14,10 +14,11 @@ def get_arguments():
 
 def process_directory(directory):
     print("process directory \"{}\"".format(directory))
-    for filename in os.listdir(directory):
-        if os.path.isdir(filename):
-            process_directory(filename)
+    for item in os.listdir(directory):
+        if os.path.isdir(item):
+            process_directory(item)
         else:
+            filename = os.path.join(directory, item)
             if filename.lower().endswith(args.type):
                 rename_file(filename)
             else:
@@ -32,7 +33,8 @@ def get_exif_datetimeoriginal_as_str(filename):
 
 def get_new_filename(filename):
     creation_date = get_exif_datetimeoriginal_as_str(filename)
-    return creation_date.translate(MAKETRANS) + "." + args.type
+    new_filename = creation_date.translate(MAKETRANS) + "." + args.type
+    return os.path.join(os.path.dirname(filename), new_filename)
 
 
 def rename_file(old_filename):
